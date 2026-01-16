@@ -5,6 +5,7 @@
     <icon>/icon/logo-16_64x64.svg</icon>
 
     <description><![CDATA[
+        <p>This plugin automatically switches the input language based on the cursor position in the IntelliJ IDEA editor.</p>
         <p>Twitter: <a href="https://x.com/BasheirHassan">@BasheirHassan</a></p>
         <p>تقوم هذه الإضافة تلقائياً بتبديل لغة الإدخال بناءً على موقع المؤشر في محرر IntelliJ IDEA.</p>
         <p>المميزات:</p>
@@ -31,7 +32,7 @@
         <!-- تعريف مكون يبدأ مع تشغيل البرنامج -->
         <postStartupActivity implementation="com.autolanguage.AutoLanguageStartupActivity"/>
         <!-- تعريف شريط الحالة -->
-        <statusBarWidgetFactory implementation="com.autolanguage.AutoLanguageStatusBarWidgetFactory"/>
+        <statusBarWidgetFactory id="AutoLanguageStatusBarWidget" implementation="com.autolanguage.AutoLanguageStatusBarWidgetFactory"/>
         
         <!-- تعريف الخدمة لتخزين الإعدادات (على مستوى التطبيق) -->
         <applicationService serviceImplementation="com.autolanguage.AutoLanguageSettingsState"/>
