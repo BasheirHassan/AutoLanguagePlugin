@@ -61,72 +61,82 @@ class AutoLanguageStartupActivity : ProjectActivity {
                 val textLength = document.textLength
                 
                 try {
-                    var detectedChar: Char? = null
-                    
-                    // 1. Check character BEFORE cursor
-                    if (offset > 0) {
-                        val charBefore = document.getText(TextRange(offset - 1, offset))[0]
-                        if (!charBefore.isWhitespace()) {
-                            detectedChar = charBefore
-                        }
-                    }
-                    
-                    // 2. If not found, check character AFTER cursor
-                    if (detectedChar == null && offset < textLength) {
-                        val charAfter = document.getText(TextRange(offset, offset + 1))[0]
-                        if (!charAfter.isWhitespace()) {
-                            detectedChar = charAfter
-                        }
-                    }
-                    
-                    // 3. Fallback: Search a bit wider (up to 5 characters in both directions)
-                    if (detectedChar == null) {
-                        for (i in 1..5) {
-                            val prev = offset - i
-                            if (prev >= 0) {
-                                val c = document.getText(TextRange(prev, prev + 1))[0]
-                                if (!c.isWhitespace()) {
-                                    detectedChar = c
-                                    break
-                                }
-                            }
-                            val next = offset + i
-                            if (next < textLength) {
-                                val c = document.getText(TextRange(next, next + 1))[0]
-                                if (!c.isWhitespace()) {
-                                    detectedChar = c
-                                    break
-                                }
-                            }
-                        }
-                    }
-
-                    val char = detectedChar ?: ' '
+                    val (detectedChar, detectedLang) = detectLanguageAround(document, offset)
                     
                     if (detectedChar != null) {
-                        if (isArabic(char)) {
-                            KeyboardSwitcher.switchToArabic()
-                            AutoLanguageStatus.updateStatus(project, char, "Arabic", "Switched to Arabic")
-                        } else if (isEnglish(char)) {
-                            KeyboardSwitcher.switchToEnglish()
-                            AutoLanguageStatus.updateStatus(project, char, "English", "Switched to English")
-                        } else {
-                            AutoLanguageStatus.updateStatus(project, char, "Neutral", "Neutral character detected")
+                        when (detectedLang) {
+                            "Arabic" -> {
+                                KeyboardSwitcher.switchToArabic()
+                                AutoLanguageStatus.updateStatus(project, detectedChar, "Arabic", "Language: Arabic")
+                            }
+                            "English" -> {
+                                KeyboardSwitcher.switchToEnglish()
+                                AutoLanguageStatus.updateStatus(project, detectedChar, "English", "Language: English")
+                            }
+                            else -> {
+                                AutoLanguageStatus.updateStatus(project, detectedChar, "Neutral", "Neutral detected")
+                            }
                         }
                     } else {
-                        AutoLanguageStatus.updateStatus(project, ' ', "None", "No character near cursor")
+                        AutoLanguageStatus.updateStatus(project, ' ', "None", "Searching...")
                     }
                     
                     // تحديث شريط الحالة
                     AutoLanguageWidgetHolder.updateWidget(project)
                 } catch (e: Exception) {
-                    AutoLanguageStatus.updateStatus(project, ' ', "Error", e.message ?: "Unknown error")
+                    AutoLanguageStatus.updateStatus(project, ' ', "Error", e.message ?: "Error")
                     AutoLanguageWidgetHolder.updateWidget(project)
                 }
             }
         }
         
         multicaster.addCaretListener(caretListener, project)
+    }
+
+    private fun detectLanguageAround(document: com.intellij.openapi.editor.Document, offset: Int): Pair<Char?, String> {
+        val textLength = document.textLength
+        
+        // فحص مباشر: الحرف السابق (الأكثر احتمالاً لأنه المكتوب للتو)
+        if (offset > 0) {
+            val c = document.getText(TextRange(offset - 1, offset))[0]
+            if (!c.isWhitespace()) {
+                if (isArabic(c)) return c to "Arabic"
+                if (isEnglish(c)) return c to "English"
+            }
+        }
+        
+        // فحص مباشر: الحرف التالي
+        if (offset < textLength) {
+            val c = document.getText(TextRange(offset, offset + 1))[0]
+            if (!c.isWhitespace()) {
+                if (isArabic(c)) return c to "Arabic"
+                if (isEnglish(c)) return c to "English"
+            }
+        }
+        
+        // بحث موسع حتى 10 أحرف
+        for (i in 1..10) {
+            // للخلف
+            val p = offset - i
+            if (p >= 0) {
+                val c = document.getText(TextRange(p, p + 1))[0]
+                if (!c.isWhitespace()) {
+                    if (isArabic(c)) return c to "Arabic"
+                    if (isEnglish(c)) return c to "English"
+                }
+            }
+            // للأمام
+            val n = offset + i - 1
+            if (n < textLength) {
+                val c = document.getText(TextRange(n, n + 1))[0]
+                if (!c.isWhitespace()) {
+                    if (isArabic(c)) return c to "Arabic"
+                    if (isEnglish(c)) return c to "English"
+                }
+            }
+        }
+        
+        return null to "None"
     }
 
     private fun isArabic(c: Char): Boolean {

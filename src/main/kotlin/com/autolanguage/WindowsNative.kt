@@ -16,7 +16,7 @@ interface User32 : StdCallLibrary {
     }
 
     fun GetForegroundWindow(): HWND
-    fun PostMessageA(hWnd: HWND, msg: Int, wParam: WPARAM, lParam: LPARAM): Boolean
+    fun PostMessageA(hWnd: HWND, msg: Int, wParam: Long, lParam: Long): Boolean
     fun GetKeyboardLayoutList(nBuff: Int, lpList: LongArray): Int
     fun GetKeyboardLayout(idThread: Int): Long
     fun ActivateKeyboardLayout(hkl: Long, flags: Int): Long
@@ -37,32 +37,25 @@ object KeyboardSwitcher {
     }
 
     private fun isArabicId(id: Long): Boolean {
-        // جميع معرفات اللغة العربية الممكنة
-        return id == 0x0401L || // العربية (السعودية)
-               id == 0x1401L || // العربية (الأردن)
-               id == 0x1801L || // العربية (الإمارات)
-               id == 0x2001L || // العربية (مصر)
-               id == 0x0C01L || // العربية (لبنان)
-               id == 0x2801L || // العربية (الكويت)
-               id == 0x2C01L || // العربية (البحرين)
-               id == 0x2401L || // العربية (قطر)
-               id == 0x1001L || // العربية (الجزائر)
-               id == 0x0801L || // العربية (العراق)
-               id == 0x1C01L || // العربية (ليبيا)
-               id == 0x3401L || // العربية (تونس)
-               id == 0x3801L || // العربية (عمان)
-               id == 0x3C01L || // العربية (السودان)
-               id == 0x3001L    // العربية (سوريا)
+        // التحقق من أن معرف اللغة الأساسي هو 0x01 (العربية)
+        return (id and 0x3FFL) == 0x01L
     }
     
-    private fun isEnglishId(id: Long): Boolean = id == 0x0409L || id == 0x0809L || id == 0x0C09L || id == 0x1009L || id == 0x1409L
+    private fun isEnglishId(id: Long): Boolean {
+        // التحقق من أن معرف اللغة الأساسي هو 0x09 (الإنجليزية)
+        return (id and 0x3FFL) == 0x09L
+    }
 
     fun switchToArabic() {
-        if (arabicLayout != 0L) sendChangeRequest(arabicLayout)
+        if (arabicLayout != 0L && !isArabicLayout(getCurrentLayout())) {
+            sendChangeRequest(arabicLayout)
+        }
     }
 
     fun switchToEnglish() {
-        if (englishLayout != 0L) sendChangeRequest(englishLayout)
+        if (englishLayout != 0L && !isEnglishLayout(getCurrentLayout())) {
+            sendChangeRequest(englishLayout)
+        }
     }
 
     fun getCurrentLayout(): Long {
@@ -74,7 +67,16 @@ object KeyboardSwitcher {
         return isArabicId(langId)
     }
 
+    fun isEnglishLayout(layout: Long): Boolean {
+        val langId = layout and 0xFFFFL
+        return isEnglishId(langId)
+    }
+
     private fun sendChangeRequest(layout: Long) {
-        User32.INSTANCE.ActivateKeyboardLayout(layout, User32.KLF_ACTIVATE or User32.KLF_SETFORPROCESS)
+        val hwnd = User32.INSTANCE.GetForegroundWindow()
+        // إرسال رسالة لتبديل اللغة للنافذة النشطة
+        User32.INSTANCE.PostMessageA(hwnd, User32.WM_INPUTLANGCHANGEREQUEST, 0L, layout)
+        // تفعيل التخطيط للعملية الحالية أيضاً للتأكد
+        User32.INSTANCE.ActivateKeyboardLayout(layout, User32.KLF_ACTIVATE)
     }
 }
