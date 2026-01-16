@@ -1,0 +1,15 @@
+<idea-plugin>
+    <id>com.autolanguage.switcher</id>
+    <name>Auto Language Switcher</name>
+    <vendor>AutoLanguage</vendor>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.jetbrains.php</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- تعريف مكون يبدأ مع تشغيل البرنامج -->
+        <postStartupActivity implementation="com.autolanguage.AutoLanguageStartupActivity"/>
+        <!-- تعريف شريط الحالة -->
+        <statusBarWidgetFactory implementation="com.autolanguage.AutoLanguageStatusBarWidgetFactory"/>
+    </extensions>
+</idea-plugin>
