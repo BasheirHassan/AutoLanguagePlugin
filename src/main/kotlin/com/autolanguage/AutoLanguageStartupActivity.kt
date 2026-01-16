@@ -180,7 +180,7 @@ class AutoLanguageStartupActivity : ProjectActivity {
             val flagEmoji = if (language == "Arabic") "🇸🇦" else "🇺🇸"
             
             val notification = NotificationGroupManager.getInstance()
-                .getNotificationGroup("Auto Language Switcher")
+                .getNotificationGroup("Auto Language")
                 .createNotification(
                     "Language Switched",
                     "Keyboard layout changed to $language $flagEmoji",
@@ -229,7 +229,7 @@ class AutoLanguageStatusBarWidget(private val project: Project) : CustomStatusBa
     init {
         // إعداد الأيقونة
         iconLabel.icon = AutoLanguageIcons.LOGO_16
-        iconLabel.toolTipText = "Auto Language Switcher"
+        iconLabel.toolTipText = "Auto Language"
         
         // إعداد النص
         textLabel.toolTipText = "Auto Language Status"
@@ -273,7 +273,7 @@ class AutoLanguageStatusBarWidget(private val project: Project) : CustomStatusBa
         
         // تحديث تلميح الأداة
         panel.toolTipText = """
-            Auto Language Switcher Status
+            Auto Language Status
             Status: $status
             Detected Character: $charDisplay
             Detected Language: $language

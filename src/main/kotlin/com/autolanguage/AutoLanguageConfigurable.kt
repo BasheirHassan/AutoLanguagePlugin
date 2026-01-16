@@ -6,7 +6,7 @@ import com.intellij.ui.dsl.builder.panel
 import com.intellij.ui.dsl.builder.bindSelected
 import com.intellij.ui.dsl.builder.selected
 
-class AutoLanguageConfigurable : BoundConfigurable("Auto Language Switcher") {
+class AutoLanguageConfigurable : BoundConfigurable("Auto Language") {
 
     private val settings = AutoLanguageSettingsState.getInstance()
 
@@ -15,7 +15,7 @@ class AutoLanguageConfigurable : BoundConfigurable("Auto Language Switcher") {
             group("General Settings") {
                 lateinit var enabledCheckBox: com.intellij.ui.dsl.builder.Cell<javax.swing.JCheckBox>
                 row {
-                    enabledCheckBox = checkBox("Enable Automatic Language Switching")
+                    enabledCheckBox = checkBox("Enable Automatic Language")
                         .bindSelected(settings::enabled)
                 }
                 row {
