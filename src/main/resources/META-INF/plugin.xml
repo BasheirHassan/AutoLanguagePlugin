@@ -26,8 +26,6 @@
         </ul>
     ]]></description>
     <depends>com.intellij.modules.platform</depends>
-    <depends>com.jetbrains.php</depends>
-
     <extensions defaultExtensionNs="com.intellij">
         <!-- تعريف مكون يبدأ مع تشغيل البرنامج -->
         <postStartupActivity implementation="com.autolanguage.AutoLanguageStartupActivity"/>

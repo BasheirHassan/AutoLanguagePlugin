@@ -6,7 +6,7 @@ import java.io.File
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.2.0"
-    id("org.jetbrains.intellij.platform") version "2.0.0"
+    id("org.jetbrains.intellij.platform") version "2.10.5"
 }
 
 group = "com.autolanguage"
@@ -76,11 +76,16 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        phpstorm("2025.3.1.1") // استهداف نسخة PhpStorm 2025.3.1.1
+        // ابتداءً من إصدار 2025.3، تم دمج كافة نسخ IntelliJ IDEA في منتج واحد موحد (Unified Product Model).
+        // هذا المنتج يشمل كافة الميزات الأساسية ويوفر توافقاً شاملاً مع كافة المحررات.
+        intellijIdea("2025.3.1")
+
         instrumentationTools()
     }
-    implementation("net.java.dev.jna:jna:5.13.0")
-    implementation("net.java.dev.jna:jna-platform:5.13.0")
+
+    // مكتبات JNA المحدثة لضمان توافقية أفضل عبر كافة المنصات والهندسات (x64, ARM64)
+    implementation("net.java.dev.jna:jna:5.15.0")
+    implementation("net.java.dev.jna:jna-platform:5.15.0")
 }
 
 intellijPlatform {
@@ -95,8 +100,16 @@ intellijPlatform {
             <ul>
                 <li>Added plugin icon support</li>
                 <li>Added icons in multiple sizes (16x16, 32x32, 64x64, 128x128)</li>
+                <li>Improved compatibility with all JetBrains IDEs</li>
+                <li>Added support for Remote Development and JetBrains Client</li>
             </ul>
         """.trimIndent()
+
+        // تحديد إصدارات المحررات المدعومة
+        ideaVersion {
+            sinceBuild = "241" // دعم من إصدار 2024.1 وما فوق
+            untilBuild = ""    // لا يوجد حد أقصى للإصدار، مما يضمن العمل مع الإصدارات المستقبلية
+        }
     }
 }
 
