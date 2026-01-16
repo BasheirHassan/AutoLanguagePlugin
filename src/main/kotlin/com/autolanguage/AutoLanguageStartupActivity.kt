@@ -9,8 +9,8 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.wm.StatusBarWidget
 import com.intellij.openapi.wm.StatusBarWidgetFactory
-import com.intellij.openapi.wm.CustomStatusBarWidget
 import com.intellij.openapi.wm.WindowManager
+import com.intellij.openapi.wm.CustomStatusBarWidget
 import javax.swing.JComponent
 import javax.swing.JLabel
 import javax.swing.JPanel
@@ -225,7 +225,6 @@ class AutoLanguageStatusBarWidget(private val project: Project) : CustomStatusBa
     private val panel = JPanel()
     private val iconLabel = JLabel()
     private val textLabel = JLabel()
-    private var statusBar: com.intellij.openapi.wm.StatusBar? = null
 
     init {
         // إعداد الأيقونة
@@ -243,7 +242,6 @@ class AutoLanguageStatusBarWidget(private val project: Project) : CustomStatusBa
     }
 
     override fun install(statusBar: com.intellij.openapi.wm.StatusBar) {
-        this.statusBar = statusBar
         updateDisplay()
     }
 
