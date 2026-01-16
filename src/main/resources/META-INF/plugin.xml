@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>com.autolanguage.switcher</id>
-    <name>Auto Language Switcher</name>
+    <name>Auto Language</name>
     <vendor>AutoLanguage</vendor>
 
     <depends>com.intellij.modules.platform</depends>
@@ -19,10 +19,10 @@
         <applicationConfigurable
             instance="com.autolanguage.AutoLanguageConfigurable"
             id="com.autolanguage.AutoLanguageConfigurable"
-            displayName="Auto Language Switcher"
+            displayName="Auto Language"
             parentId="tools"/>
 
         <!-- تعريف مجموعة التنبيهات -->
-        <notificationGroup id="Auto Language Switcher" displayType="BALLOON"/>
+        <notificationGroup id="Auto Language" displayType="BALLOON"/>
     </extensions>
 </idea-plugin>

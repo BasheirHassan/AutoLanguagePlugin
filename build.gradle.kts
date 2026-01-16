@@ -1,6 +1,7 @@
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.io.File
 
 plugins {
     id("java")
@@ -10,10 +11,51 @@ plugins {
 
 group = "com.autolanguage"
 
-// إنشاء رقم إصدار تلقائي بناءً على التاريخ والوقت
+// إنشاء رقم إصدار تلقائي بناءً على التاريخ ورقم بناء متزايد
+val versionFile = file("version.properties")
 val now = LocalDateTime.now()
-val versionNumber = "${now.year}.${now.monthValue.toString().padStart(2, '0')}.${now.dayOfMonth.toString().padStart(2, '0')}.${now.hour.toString().padStart(2, '0')}${now.minute.toString().padStart(2, '0')}"
+val baseVersion = "${(now.year % 100).toString().padStart(2, '0')}.${now.monthValue}"
+
+// دالة لحساب رقم البناء
+fun calculateBuildNumber(): Int {
+    if (!versionFile.exists()) return 1
+    
+    val content = versionFile.readText().trim()
+    if (content.isEmpty()) return 1
+    
+    // البحث عن سطر version=xxx
+    val versionLine = content.lines().find { it.startsWith("version=") }
+    if (versionLine == null) return 1
+    
+    val currentVersion = versionLine.substringAfter("version=").trim()
+    if (currentVersion.isEmpty()) return 1
+    
+    val currentBaseVersion = currentVersion.substringBeforeLast('.')
+    val currentBuildNumber = currentVersion.substringAfterLast('.').toIntOrNull() ?: 0
+    
+    // إذا تغير التاريخ الأساسي، نبدأ من 1، وإلا نزيد الرقم
+    return if (currentBaseVersion == baseVersion) {
+        currentBuildNumber + 1
+    } else {
+        1
+    }
+}
+
+val buildNumber = calculateBuildNumber()
+val versionNumber = "$baseVersion.$buildNumber"
 version = versionNumber
+
+// حفظ رقم الإصدار الجديد في الملف
+tasks.register("saveVersion") {
+    doLast {
+        versionFile.writeText("version=$versionNumber")
+    }
+}
+
+// ربط حفظ الإصدار مع مهمة البناء
+tasks.named("build") {
+    dependsOn("saveVersion")
+}
 
 // Set consistent JVM target for both Java and Kotlin
 tasks.withType<JavaCompile> {
@@ -44,7 +86,7 @@ dependencies {
 intellijPlatform {
     pluginConfiguration {
         id = "com.autolanguage.switcher"
-        name = "Auto Language Switcher"
+        name = "Auto Language"
         vendor {
             name = "AutoLanguage"
         }

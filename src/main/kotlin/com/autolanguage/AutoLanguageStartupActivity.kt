@@ -200,7 +200,7 @@ class AutoLanguageStatusBarWidgetFactory : StatusBarWidgetFactory {
         return widget
     }
 
-    override fun getDisplayName(): String = "Auto Language Switcher"
+    override fun getDisplayName(): String = "Auto Language"
 
     override fun isAvailable(project: Project): Boolean = true
 
