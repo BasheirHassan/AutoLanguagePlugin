@@ -2,6 +2,7 @@
     <id>com.autolanguage.switcher</id>
     <name>Auto Language</name>
     <vendor>AutoLanguage</vendor>
+    <icon>/icons/log-64.png</icon>
 
     <description><![CDATA[
         <p>تقوم هذه الإضافة تلقائياً بتبديل لغة الإدخال بناءً على موقع المؤشر في محرر IntelliJ IDEA.</p>
