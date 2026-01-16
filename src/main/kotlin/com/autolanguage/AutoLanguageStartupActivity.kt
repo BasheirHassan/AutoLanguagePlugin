@@ -262,7 +262,7 @@ class AutoLanguageStatusBarWidget(private val project: Project) : CustomStatusBa
         panel.isVisible = true
         
         val (currentChar, language, status) = AutoLanguageStatus.getStatus(project)
-        val charDisplay = if (currentChar == ' ') " " else "|[$currentChar]"
+        val charDisplay = if (currentChar == ' ') " " else "  [$currentChar]"
         val layoutName = AutoLanguageStatus.getCurrentLayoutName()
         
         // تحديث الأيقونة حسب اللغة الحالية
