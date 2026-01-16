@@ -3,6 +3,16 @@
     <name>Auto Language</name>
     <vendor>AutoLanguage</vendor>
 
+    <description><![CDATA[
+        <p>تقوم هذه الإضافة تلقائياً بتبديل لغة الإدخال بناءً على موقع المؤشر في محرر IntelliJ IDEA.</p>
+        <p>المميزات:</p>
+        <ul>
+            <li>الكشف التلقائي عن لغة النص عند تحريك المؤشر</li>
+            <li>التبديل السريع بين اللغات (العربية والإنجليزية)</li>
+            <li>دعم أنظمة التشغيل Windows و macOS و Linux</li>
+            <li>إعدادات قابلة للتخصيص في إعدادات IntelliJ IDEA</li>
+        </ul>
+    ]]></description>
     <depends>com.intellij.modules.platform</depends>
     <depends>com.jetbrains.php</depends>
 
