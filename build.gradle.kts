@@ -93,7 +93,6 @@ intellijPlatform {
         vendor {
             name = "AutoLanguage"
         }
-        description = "Automatically switches keyboard layout based on the text context and characters."
         changeNotes = """
             <ul>
                 <li>Added plugin icon support</li>
