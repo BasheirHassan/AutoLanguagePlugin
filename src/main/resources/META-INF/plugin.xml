@@ -12,6 +12,15 @@
             <li>دعم أنظمة التشغيل Windows و macOS و Linux</li>
             <li>إعدادات قابلة للتخصيص في إعدادات IntelliJ IDEA</li>
         </ul>
+        <hr/>
+        <p>This plugin automatically switches the input language based on the cursor position in the IntelliJ IDEA editor.</p>
+        <p>Features:</p>
+        <ul>
+            <li>Automatic detection of text language when moving the cursor</li>
+            <li>Quick switching between languages (Arabic and English)</li>
+            <li>Support for Windows, macOS, and Linux operating systems</li>
+            <li>Customizable settings in IntelliJ IDEA preferences</li>
+        </ul>
     ]]></description>
     <depends>com.intellij.modules.platform</depends>
     <depends>com.jetbrains.php</depends>
