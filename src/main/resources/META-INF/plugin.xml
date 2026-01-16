@@ -45,6 +45,6 @@
             parentId="tools"/>
 
         <!-- تعريف مجموعة التنبيهات -->
-        <notificationGroup id="Auto Language" displayType="BALLOON"/>
+        <notificationGroup id="Auto Language Switcher" displayType="BALLOON"/>
     </extensions>
 </idea-plugin>
