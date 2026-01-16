@@ -51,6 +51,8 @@ object AutoLanguageStatus {
 }
 
 class AutoLanguageStartupActivity : ProjectActivity {
+    private var lastNotification: com.intellij.notification.Notification? = null
+
     override suspend fun execute(project: Project) {
         val multicaster = EditorFactory.getInstance().eventMulticaster
         
@@ -168,15 +170,25 @@ class AutoLanguageStartupActivity : ProjectActivity {
         if (!settings.showNotifications) return
 
         ApplicationManager.getApplication().invokeLater {
+            // إغلاق الإشعار السابق إذا كان موجوداً لتجنب التراكم
+            lastNotification?.expire()
+
             val icon = if (language == "Arabic") "🇸🇦" else "🇺🇸"
-            NotificationGroupManager.getInstance()
+            val notification = NotificationGroupManager.getInstance()
                 .getNotificationGroup("Auto Language Switcher")
                 .createNotification(
                     "Language Switched",
                     "Keyboard layout changed to $language $icon",
                     NotificationType.INFORMATION
                 )
-                .notify(project)
+            
+            notification.notify(project)
+            lastNotification = notification
+
+            // إخفاء الإشعار تلقائياً بعد ثانيتين
+            com.intellij.util.concurrency.AppExecutorUtil.getAppScheduledExecutorService().schedule({
+                notification.expire()
+            }, 2, java.util.concurrent.TimeUnit.SECONDS)
         }
     }
 }
