@@ -23,6 +23,11 @@ class AutoLanguageConfigurable : BoundConfigurable("Auto Language Switcher") {
                         .bindSelected(settings::showNotifications)
                         .enabledIf(enabledCheckBox.selected)
                 }
+                row {
+                    checkBox("Show status in status bar")
+                        .bindSelected(settings::showStatusBar)
+                        .enabledIf(enabledCheckBox.selected)
+                }
             }
         }
     }

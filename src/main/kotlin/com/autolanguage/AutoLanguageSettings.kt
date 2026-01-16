@@ -13,6 +13,7 @@ class AutoLanguageSettingsState : PersistentStateComponent<AutoLanguageSettingsS
 
     var enabled: Boolean = true
     var showNotifications: Boolean = true
+    var showStatusBar: Boolean = true
 
     override fun getState(): AutoLanguageSettingsState = this
 

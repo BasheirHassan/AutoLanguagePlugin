@@ -236,7 +236,7 @@ class AutoLanguageStatusBarWidget(private val project: Project) : CustomStatusBa
 
     fun updateDisplay() {
         val settings = AutoLanguageSettingsState.getInstance()
-        if (!settings.enabled) {
+        if (!settings.enabled || !settings.showStatusBar) {
             label.isVisible = false
             return
         }
