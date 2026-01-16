@@ -223,6 +223,13 @@ class AutoLanguageStatusBarWidget(private val project: Project) : CustomStatusBa
     }
 
     fun updateDisplay() {
+        val settings = AutoLanguageSettingsState.getInstance()
+        if (!settings.enabled) {
+            label.isVisible = false
+            return
+        }
+        label.isVisible = true
+        
         val (currentChar, language, status) = AutoLanguageStatus.getStatus(project)
         val charDisplay = if (currentChar == ' ') " " else "'$currentChar'"
         val layoutName = AutoLanguageStatus.getCurrentLayoutName()

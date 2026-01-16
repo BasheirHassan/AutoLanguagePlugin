@@ -26,4 +26,12 @@ class AutoLanguageConfigurable : BoundConfigurable("Auto Language Switcher") {
             }
         }
     }
+
+    override fun apply() {
+        super.apply()
+        // تحديث جميع الودجات في جميع المشاريع المفتوحة فور تطبيق الإعدادات
+        com.intellij.openapi.project.ProjectManager.getInstance().openProjects.forEach { project ->
+            AutoLanguageWidgetHolder.updateWidget(project)
+        }
+    }
 }
