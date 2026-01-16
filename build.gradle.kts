@@ -91,5 +91,16 @@ intellijPlatform {
             name = "AutoLanguage"
         }
         description = "Automatically switches keyboard layout based on the text context and characters."
+        changeNotes = """
+            <ul>
+                <li>Added plugin icon support</li>
+                <li>Added icons in multiple sizes (16x16, 32x32, 64x64, 128x128)</li>
+            </ul>
+        """.trimIndent()
     }
+}
+
+// إضافة الموارد بما في ذلك الأيقونات
+tasks.named<ProcessResources>("processResources") {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }

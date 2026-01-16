@@ -13,6 +13,8 @@ import com.intellij.openapi.wm.CustomStatusBarWidget
 import com.intellij.openapi.wm.WindowManager
 import javax.swing.JComponent
 import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.SwingConstants
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.application.ApplicationManager
@@ -173,14 +175,20 @@ class AutoLanguageStartupActivity : ProjectActivity {
             // إغلاق الإشعار السابق إذا كان موجوداً لتجنب التراكم
             lastNotification?.expire()
 
-            val icon = if (language == "Arabic") "🇸🇦" else "🇺🇸"
+            // استخدام الأيقونة الجديدة
+            val icon = if (language == "Arabic") AutoLanguageIcons.LOGO_32 else AutoLanguageIcons.LOGO_32
+            val flagEmoji = if (language == "Arabic") "🇸🇦" else "🇺🇸"
+            
             val notification = NotificationGroupManager.getInstance()
                 .getNotificationGroup("Auto Language Switcher")
                 .createNotification(
                     "Language Switched",
-                    "Keyboard layout changed to $language $icon",
+                    "Keyboard layout changed to $language $flagEmoji",
                     NotificationType.INFORMATION
                 )
+            
+            // إضافة الأيقونة للإشعار
+            notification.setIcon(icon)
             
             notification.notify(project)
             lastNotification = notification
@@ -214,10 +222,23 @@ class AutoLanguageStatusBarWidgetFactory : StatusBarWidgetFactory {
 }
 
 class AutoLanguageStatusBarWidget(private val project: Project) : CustomStatusBarWidget {
-    private val label = JLabel()
+    private val panel = JPanel()
+    private val iconLabel = JLabel()
+    private val textLabel = JLabel()
     private var statusBar: com.intellij.openapi.wm.StatusBar? = null
 
     init {
+        // إعداد الأيقونة
+        iconLabel.icon = AutoLanguageIcons.LOGO_16
+        iconLabel.toolTipText = "Auto Language Switcher"
+        
+        // إعداد النص
+        textLabel.toolTipText = "Auto Language Status"
+        
+        // إضافة المكونات إلى اللوحة
+        panel.add(iconLabel)
+        panel.add(textLabel)
+        
         updateDisplay()
     }
 
@@ -231,23 +252,29 @@ class AutoLanguageStatusBarWidget(private val project: Project) : CustomStatusBa
     override fun ID(): String = "AutoLanguageStatusBarWidget"
 
     override fun getComponent(): JComponent {
-        return label
+        return panel
     }
 
     fun updateDisplay() {
         val settings = AutoLanguageSettingsState.getInstance()
         if (!settings.enabled || !settings.showStatusBar) {
-            label.isVisible = false
+            panel.isVisible = false
             return
         }
-        label.isVisible = true
+        panel.isVisible = true
         
         val (currentChar, language, status) = AutoLanguageStatus.getStatus(project)
         val charDisplay = if (currentChar == ' ') " " else "'$currentChar'"
         val layoutName = AutoLanguageStatus.getCurrentLayoutName()
         
-        label.text = "🔄 Auto Language: $status | Detected: $charDisplay | Current: $layoutName"
-        label.toolTipText = """
+        // تحديث الأيقونة حسب اللغة الحالية
+        iconLabel.icon = if (layoutName == "Arabic") AutoLanguageIcons.LOGO_16 else AutoLanguageIcons.LOGO_16
+        
+        // تحديث النص
+        textLabel.text = "Auto Language: $status | Detected: $charDisplay | Current: $layoutName"
+        
+        // تحديث تلميح الأداة
+        panel.toolTipText = """
             Auto Language Switcher Status
             Status: $status
             Detected Character: $charDisplay
@@ -255,8 +282,8 @@ class AutoLanguageStatusBarWidget(private val project: Project) : CustomStatusBa
             Current Layout: $layoutName
         """.trimIndent()
         
-        label.revalidate()
-        label.repaint()
+        panel.revalidate()
+        panel.repaint()
     }
 }
 
