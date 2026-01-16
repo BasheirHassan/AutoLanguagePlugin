@@ -13,6 +13,9 @@ import com.intellij.openapi.wm.CustomStatusBarWidget
 import com.intellij.openapi.wm.WindowManager
 import javax.swing.JComponent
 import javax.swing.JLabel
+import com.intellij.notification.NotificationGroupManager
+import com.intellij.notification.NotificationType
+import com.intellij.openapi.application.ApplicationManager
 
 // كائن مشترك لتخزين الحالة
 // كائن مشترك لتخزين الحالة لكل مشروع
@@ -52,30 +55,40 @@ class AutoLanguageStartupActivity : ProjectActivity {
         val multicaster = EditorFactory.getInstance().eventMulticaster
         
         val caretListener = object : CaretListener {
+            private var lastLanguage: String? = AutoLanguageStatus.getCurrentLayoutName()
+
             override fun caretPositionChanged(event: CaretEvent) {
                 val editor = event.editor
                 if (editor.project != project) return
                 
+                val settings = AutoLanguageSettingsState.getInstance(project)
+                if (!settings.state.enabled) {
+                    AutoLanguageStatus.updateStatus(project, ' ', "Disabled", "Plugin is disabled")
+                    AutoLanguageWidgetHolder.updateWidget(project)
+                    return
+                }
+
                 val offset = event.caret?.offset ?: return
                 val document = editor.document
-                val textLength = document.textLength
                 
                 try {
                     val (detectedChar, detectedLang) = detectLanguageAround(document, offset)
                     
-                    if (detectedChar != null) {
-                        when (detectedLang) {
-                            "Arabic" -> {
-                                KeyboardSwitcher.switchToArabic()
-                                AutoLanguageStatus.updateStatus(project, detectedChar, "Arabic", "Language: Arabic")
+                    if (detectedChar != null && detectedLang != "None") {
+                        if (detectedLang != lastLanguage) {
+                            when (detectedLang) {
+                                "Arabic" -> {
+                                    KeyboardSwitcher.switchToArabic()
+                                    AutoLanguageStatus.updateStatus(project, detectedChar, "Arabic", "Language: Arabic")
+                                    showLanguageNotification(project, "Arabic")
+                                }
+                                "English" -> {
+                                    KeyboardSwitcher.switchToEnglish()
+                                    AutoLanguageStatus.updateStatus(project, detectedChar, "English", "Language: English")
+                                    showLanguageNotification(project, "English")
+                                }
                             }
-                            "English" -> {
-                                KeyboardSwitcher.switchToEnglish()
-                                AutoLanguageStatus.updateStatus(project, detectedChar, "English", "Language: English")
-                            }
-                            else -> {
-                                AutoLanguageStatus.updateStatus(project, detectedChar, "Neutral", "Neutral detected")
-                            }
+                            lastLanguage = detectedLang
                         }
                     } else {
                         AutoLanguageStatus.updateStatus(project, ' ', "None", "Searching...")
@@ -149,6 +162,23 @@ class AutoLanguageStartupActivity : ProjectActivity {
     }
     
     private fun isEnglish(c: Char): Boolean = c in 'a'..'z' || c in 'A'..'Z'
+
+    private fun showLanguageNotification(project: Project, language: String) {
+        val settings = AutoLanguageSettingsState.getInstance(project)
+        if (!settings.state.showNotifications) return
+
+        ApplicationManager.getApplication().invokeLater {
+            val icon = if (language == "Arabic") "🇸🇦" else "🇺🇸"
+            NotificationGroupManager.getInstance()
+                .getNotificationGroup("Auto Language Switcher")
+                .createNotification(
+                    "Language Switched",
+                    "Keyboard layout changed to $language $icon",
+                    NotificationType.INFORMATION
+                )
+                .notify(project)
+        }
+    }
 }
 
 class AutoLanguageStatusBarWidgetFactory : StatusBarWidgetFactory {

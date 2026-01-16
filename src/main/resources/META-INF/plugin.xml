@@ -11,5 +11,15 @@
         <postStartupActivity implementation="com.autolanguage.AutoLanguageStartupActivity"/>
         <!-- تعريف شريط الحالة -->
         <statusBarWidgetFactory implementation="com.autolanguage.AutoLanguageStatusBarWidgetFactory"/>
+        
+        <!-- تعريف الإعدادات -->
+        <projectConfigurable
+            instance="com.autolanguage.AutoLanguageConfigurable"
+            id="com.autolanguage.AutoLanguageConfigurable"
+            displayName="Auto Language Switcher"
+            parentId="tools"/>
+
+        <!-- تعريف مجموعة التنبيهات -->
+        <notificationGroup id="Auto Language Switcher" displayType="BALLOON"/>
     </extensions>
 </idea-plugin>
