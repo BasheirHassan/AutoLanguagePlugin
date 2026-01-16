@@ -12,8 +12,11 @@
         <!-- تعريف شريط الحالة -->
         <statusBarWidgetFactory implementation="com.autolanguage.AutoLanguageStatusBarWidgetFactory"/>
         
-        <!-- تعريف الإعدادات -->
-        <projectConfigurable
+        <!-- تعريف الخدمة لتخزين الإعدادات (على مستوى التطبيق) -->
+        <applicationService serviceImplementation="com.autolanguage.AutoLanguageSettingsState"/>
+        
+        <!-- تعريف الإعدادات (على مستوى التطبيق) -->
+        <applicationConfigurable
             instance="com.autolanguage.AutoLanguageConfigurable"
             id="com.autolanguage.AutoLanguageConfigurable"
             displayName="Auto Language Switcher"

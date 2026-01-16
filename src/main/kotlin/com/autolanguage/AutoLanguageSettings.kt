@@ -2,28 +2,25 @@ package com.autolanguage
 
 import com.intellij.openapi.components.*
 import com.intellij.openapi.project.Project
+import com.intellij.util.xmlb.XmlSerializerUtil
 
-@Service(Service.Level.PROJECT)
+@Service(Service.Level.APP)
 @State(
     name = "com.autolanguage.settings.AutoLanguageSettingsState",
     storages = [Storage("AutoLanguageSettings.xml")]
 )
-class AutoLanguageSettingsState : PersistentStateComponent<AutoLanguageSettingsState.State> {
+class AutoLanguageSettingsState : PersistentStateComponent<AutoLanguageSettingsState> {
 
-    class State {
-        var enabled: Boolean = true
-        var showNotifications: Boolean = true
-    }
+    var enabled: Boolean = true
+    var showNotifications: Boolean = true
 
-    private var myState = State()
+    override fun getState(): AutoLanguageSettingsState = this
 
-    override fun getState(): State = myState
-
-    override fun loadState(state: State) {
-        myState = state
+    override fun loadState(state: AutoLanguageSettingsState) {
+        XmlSerializerUtil.copyBean(state, this)
     }
 
     companion object {
-        fun getInstance(project: Project): AutoLanguageSettingsState = project.getService(AutoLanguageSettingsState::class.java)
+        fun getInstance(): AutoLanguageSettingsState = com.intellij.openapi.application.ApplicationManager.getApplication().getService(AutoLanguageSettingsState::class.java)
     }
 }

@@ -61,8 +61,8 @@ class AutoLanguageStartupActivity : ProjectActivity {
                 val editor = event.editor
                 if (editor.project != project) return
                 
-                val settings = AutoLanguageSettingsState.getInstance(project)
-                if (!settings.state.enabled) {
+                val settings = AutoLanguageSettingsState.getInstance()
+                if (!settings.enabled) {
                     AutoLanguageStatus.updateStatus(project, ' ', "Disabled", "Plugin is disabled")
                     AutoLanguageWidgetHolder.updateWidget(project)
                     return
@@ -164,8 +164,8 @@ class AutoLanguageStartupActivity : ProjectActivity {
     private fun isEnglish(c: Char): Boolean = c in 'a'..'z' || c in 'A'..'Z'
 
     private fun showLanguageNotification(project: Project, language: String) {
-        val settings = AutoLanguageSettingsState.getInstance(project)
-        if (!settings.state.showNotifications) return
+        val settings = AutoLanguageSettingsState.getInstance()
+        if (!settings.showNotifications) return
 
         ApplicationManager.getApplication().invokeLater {
             val icon = if (language == "Arabic") "🇸🇦" else "🇺🇸"
