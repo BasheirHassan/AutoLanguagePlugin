@@ -45,6 +45,30 @@ set JAVA_EXE=java.exe
 %JAVA_EXE% -version >NUL 2>&1
 if %ERRORLEVEL% equ 0 goto execute
 
+@rem Try to find bundled JDK in IntelliJ IDEA installation
+for /f "delims=" %%i in ('dir /b /ad "C:\Program Files\JetBrains\IntelliJ IDEA*" 2^>nul') do (
+    if exist "C:\Program Files\JetBrains\%%i\jbr\bin\java.exe" (
+        set JAVA_HOME=C:\Program Files\JetBrains\%%i\jbr
+        goto findJavaFromJavaHome
+    )
+)
+
+@rem Try JetBrains Rider
+for /f "delims=" %%i in ('dir /b /ad "C:\Program Files\JetBrains\Rider*" 2^>nul') do (
+    if exist "C:\Program Files\JetBrains\%%i\jbr\bin\java.exe" (
+        set JAVA_HOME=C:\Program Files\JetBrains\%%i\jbr
+        goto findJavaFromJavaHome
+    )
+)
+
+@rem Try Program Files (x86)
+for /f "delims=" %%i in ('dir /b /ad "C:\Program Files (x86)\JetBrains\IntelliJ IDEA*" 2^>nul') do (
+    if exist "C:\Program Files (x86)\JetBrains\%%i\jbr\bin\java.exe" (
+        set JAVA_HOME=C:\Program Files (x86)\JetBrains\%%i\jbr
+        goto findJavaFromJavaHome
+    )
+)
+
 echo. 1>&2
 echo ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH. 1>&2
 echo. 1>&2
