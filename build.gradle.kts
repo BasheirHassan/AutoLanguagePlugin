@@ -1,13 +1,10 @@
-import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.io.File
 
 plugins {
     id("java")
     // تحديث نسخ الإضافات لضمان التوافق مع بيئة تطوير 2026
-    id("org.jetbrains.kotlin.jvm") version "2.2.0"
-    id("org.jetbrains.intellij.platform") version "2.13.1"
+    id("org.jetbrains.kotlin.jvm") version "2.4.20"
+    id("org.jetbrains.intellij.platform") version "2.19.0"
 }
 
 group = "com.autolanguage"
@@ -78,8 +75,8 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        // استهداف إصدار 2026.1 (أحدث إصدار مستقر حالياً)
-        intellijIdea("2026.1")
+        // استهداف إصدار 2026.2 (أحدث إصدار مستقر حالياً)
+        intellijIdea("2026.2")
 
         // الأدوات الضرورية لتطوير الإضافات
         pluginVerifier()
@@ -103,7 +100,7 @@ intellijPlatform {
 
         changeNotes = """
             <ul>
-                <li>Updated compatibility for IntelliJ IDEA 2026.1</li>
+                <li>Updated compatibility for IntelliJ IDEA 2026.2</li>
                 <li>Enhanced JNA libraries for better cross-platform support</li>
                 <li>Fixed minor issues with Remote Development (Split Mode)</li>
                 <li>Added support for modern icons and UI components</li>
@@ -114,7 +111,7 @@ intellijPlatform {
             // دعم من إصدار 2024.1 (الحد الأدنى)
             sinceBuild = "241"
             // دعم كافة إصدارات فروع 2025 و 2026
-            untilBuild = "261.*"
+            untilBuild = "262.*"
         }
     }
 

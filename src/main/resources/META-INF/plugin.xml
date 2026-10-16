@@ -12,7 +12,7 @@
         <ul>
             <li>الكشف التلقائي عن لغة النص عند تحريك المؤشر</li>
             <li>التبديل السريع بين اللغات (العربية والإنجليزية)</li>
-            <li>دعم أنظمة التشغيل Windows و macOS و Linux</li>
+            <li>التبديل التلقائي للكيبورد مدعوم على Windows فقط، وعلى macOS/Linux يعرض حالة الكشف دون تبديل</li>
             <li>إعدادات قابلة للتخصيص في إعدادات IntelliJ IDEA</li>
         </ul>
         <hr/>
@@ -21,13 +21,13 @@
         <ul>
             <li>Automatic detection of text language when moving the cursor</li>
             <li>Quick switching between languages (Arabic and English)</li>
-            <li>Support for Windows, macOS, and Linux operating systems</li>
+            <li>Windows supported (keyboard switching via Win32 API). On macOS/Linux the plugin shows detection status only</li>
             <li>Customizable settings in IntelliJ IDEA preferences</li>
         </ul>
     ]]></description>
     <depends>com.intellij.modules.platform</depends>
     <extensions defaultExtensionNs="com.intellij">
-        <!-- تعريف مكون يبدأ مع تشغيل البرنامج -->
+        <!-- نشاط بدء المشروع (ProjectActivity تُسجَّل عبر postStartupActivity) -->
         <postStartupActivity implementation="com.autolanguage.AutoLanguageStartupActivity"/>
         <!-- تعريف شريط الحالة -->
         <statusBarWidgetFactory id="AutoLanguageStatusBarWidget" implementation="com.autolanguage.AutoLanguageStatusBarWidgetFactory"/>

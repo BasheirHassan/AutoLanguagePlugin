@@ -8,9 +8,8 @@ import com.intellij.ui.dsl.builder.selected
 
 class AutoLanguageConfigurable : BoundConfigurable("Auto Language") {
 
-    private val settings = AutoLanguageSettingsState.getInstance()
-
     override fun createPanel(): DialogPanel {
+        val settings = AutoLanguageSettingsState.getInstance()
         return panel {
             group("General Settings") {
                 lateinit var enabledCheckBox: com.intellij.ui.dsl.builder.Cell<javax.swing.JCheckBox>
